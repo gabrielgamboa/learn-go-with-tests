@@ -10,28 +10,26 @@ func TestPerimeter(t *testing.T) {
 }
 
 func TestArea(t *testing.T) {
-	checkArea := func(t testing.TB, shape Shape, want float64) {
-		t.Helper()
-		got := shape.Area()
-
-		if got != want {
-			t.Errorf("got %g but want %g", got, want)
-		}
+	areaTests := []struct { //table driven tests => multiple cases to test one interface
+		name      string
+		shape     Shape
+		shapeArea float64
+	}{
+		{name: "Rectangle", shape: Rectangle{12, 16}, shapeArea: 192.0},
+		{name: "Circle", shape: Circle{10}, shapeArea: 314.1592653589793},
+		{name: "Triangle", shape: Triangle{12, 6}, shapeArea: 36.0},
 	}
 
-	t.Run("rectangles", func(t *testing.T) {
-		rectangle := Rectangle{12, 6}
-		want := 72.0
+	for _, tt := range areaTests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := tt.shape.Area()
+			want := tt.shapeArea
 
-		checkArea(t, rectangle, want)
-	})
-
-	t.Run("circles", func(t *testing.T) {
-		circle := Circle{10}
-		want := 314.1592653589793
-
-		checkArea(t, circle, want)
-	})
+			if got != want {
+				t.Errorf("%v: got %g want %g", tt.shape, got, want)
+			}
+		})
+	}
 }
 
 func assertMessage(t testing.TB, got, want float64) {
